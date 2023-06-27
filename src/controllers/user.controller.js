@@ -1,43 +1,44 @@
 const db = require("../config/database");
 
 exports.createUser = async (req, res) => {
-  const { userName, userEmail, userPassword } = req.body;
+  const { user_name, user_email, user_password } = req.body;
   const { rows } = await db.query(
-    "INSERT INTO user ( user_name, user_email, user_password ) VALUES ( ?, ?, ? )",
-    [(userName, userEmail, userPassword)]
+    "INSERT INTO usuarios (user_name, user_email, user_password) VALUES ($1, $2, $3)",
+    [user_name, user_email, user_password]
   );
   res.status(201).send({
     message: "Usuário adicionado com sucesso",
     body: {
-      user: { userName, userEmail, userPassword },
+      user: { user_name, user_email, user_password },
     },
   });
 };
 
 exports.listAllUsers = async (req, res) => {
-  console.log('alo');
-  const response = await db.query("SELECT * FROM user");
+  const response = await db.query("SELECT * FROM usuarios");
   res.status(200).send(response.rows);
 };
 
-exports.findById = async (req, res) => {
+exports.findUserById = async (req, res) => {
   const userId = parseInt(req.params.id);
-  const response = await db.query("SELECT * FROM user WHERE id=?", [userId]);
+  const response = await db.query("SELECT * FROM usuarios WHERE user_id=$1", [
+    userId,
+  ]);
   res.status(200).send(response.rows);
 };
 
-exports.updateById = async (req, res) => {
+exports.updateUserById = async (req, res) => {
   const userId = parseInt(req.params.id);
   const { userName, userEmail, userPassword } = req.body;
   const response = await db.query(
-    "UPDATE user SET userName=?, userEmail=?, userPassword=? WHERE id=?",
+    "UPDATE usuarios SET user_name=$1, user_email=$2, user_password=$3 WHERE user_id=$4",
     [(userName, userEmail, userPassword, userId)]
   );
   res.status(200).send({ message: "Atualizado com sucesso" });
 };
 
-exports.deleteById = async (req, res) => {
+exports.deleteUserById = async (req, res) => {
   const userId = parseInt(req.params.id);
-  await db.query("DELETE FROM user WHERE id=?", [userId]);
+  await db.query("DELETE FROM usuarios WHERE id_user=$1", [userId]);
   res.status(200).send({ message: "Deletado com sucesso" });
 };

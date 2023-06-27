@@ -1,28 +1,30 @@
 const { Pool } = require("pg");
-// const dotenv = require("dotenv");
+const dotenv = require("dotenv");
 
-// dotenv.config();
-
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-// });
+dotenv.config();
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "api",
-  password: "postgres",
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
 });
 
-pool
-  .query("SELECT * FROM user")
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+// const pool = new Pool({
+//   user: "postgres",
+//   host: "localhost",
+//   database: "api",
+//   password: "postgres",
+//   port: 5432,
+// });
+
+// pool
+//   .query("SELECT * FROM usuarios")
+//   .then((result) => {
+//     console.log(result.rows);
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//   });
+
+pool.connect();
 
 pool.on("connect", () => {
   console.log("Base de dados conectada");
